@@ -15,7 +15,8 @@ from imu import (
 from rgb_sensor import (
     is_black,
     is_blue,
-    is_silver
+    is_silver,
+    get_values
 )
 
 from indicators import (
@@ -36,8 +37,8 @@ from time import sleep, time
 robot = Motors()
 
 # Distance thresholds (cm)
-FRONT_LIMIT = 30
-SIDE_LIMIT = 25
+FRONT_LIMIT = 18
+SIDE_LIMIT = 15
 
 # Speeds (%)
 FORWARD_SPEED = 30
@@ -57,12 +58,13 @@ try:
     while True:
 
         current_time = time()
+        r, g, b, c = get_values()
 
         # =========================
         # BLUE TILE
         # =========================
 
-        if is_blue() and current_time - last_blue_time > 8:
+        if is_blue(r, g, b, c) and current_time - last_blue_time > 8:
 
             print("\n🔵 BLUE TILE DETECTED")
 
@@ -89,7 +91,7 @@ try:
         # BLACK TILE
         # =========================
 
-        if is_black() and current_time - last_black_time > 5:
+        if is_black(r, g, b, c) and current_time - last_black_time > 5:
 
             print("\n⚫ BLACK TILE DETECTED")
 
@@ -110,7 +112,7 @@ try:
         # SILVER TILE
         # =========================
 
-        if is_silver():
+        if is_silver(r, g, b, c):
 
             print("⚪ SILVER TILE DETECTED")
 
@@ -137,7 +139,8 @@ try:
         print(
             f"F:{front:5.1f}  "
             f"L:{left:5.1f}  "
-            f"R:{right:5.1f}"
+            f"R:{right:5.1f}  "
+            f"RGB=({r},{g},{b},{c})"
         )
 
 
@@ -159,13 +162,13 @@ try:
             print("WALL DETECTED")
 
             robot.stop()
-            sleep(0.2)
+            sleep(0.05)
 
             robot.backward(REVERSE_SPEED)
-            sleep(0.2)
+            sleep(0.10)
 
             robot.stop()
-            sleep(0.2)
+            sleep(0.05)
 
 
             # LEFT PRIORITY
@@ -190,8 +193,7 @@ try:
 
                 turn_180(robot)
 
-
-        sleep(0.05)
+        sleep(0.01)
 
 
 except KeyboardInterrupt:

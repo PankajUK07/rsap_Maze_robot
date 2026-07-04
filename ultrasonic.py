@@ -29,7 +29,7 @@ def get_distance(trig, echo):
     lgpio.gpio_write(h, trig, 0)
 
     # Wait for echo HIGH
-    timeout = time.time() + 0.05
+    timeout = time.time() + 0.02
     while lgpio.gpio_read(h, echo) == 0:
         if time.time() > timeout:
             return 999
@@ -37,7 +37,7 @@ def get_distance(trig, echo):
     start = time.time()
 
     # Wait for echo LOW
-    timeout = time.time() + 0.05
+    timeout = time.time() + 0.02
     while lgpio.gpio_read(h, echo) == 1:
         if time.time() > timeout:
             return 999
@@ -53,12 +53,12 @@ def get_front_distance():
 
 
 def get_left_distance():
-    time.sleep(0.06)   # Prevent cross-talk
+    time.sleep(0.01)   # Prevent cross-talk
     return get_distance(LEFT_TRIG, LEFT_ECHO)
 
 
 def get_right_distance():
-    time.sleep(0.06)   # Prevent cross-talk
+    time.sleep(0.01)   # Prevent cross-talk
     return get_distance(RIGHT_TRIG, RIGHT_ECHO)
 
 
