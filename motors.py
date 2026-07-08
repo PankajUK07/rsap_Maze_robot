@@ -38,6 +38,17 @@ class Motors:
         lgpio.tx_pwm(self.h, ENA, 1000, speed)
         lgpio.tx_pwm(self.h, ENB, 1000, speed)
 
+    def set_speeds(self, left_speed, right_speed):
+
+        lgpio.gpio_write(self.h, IN1, 1)
+        lgpio.gpio_write(self.h, IN2, 0)
+
+        lgpio.gpio_write(self.h, IN3, 1)
+        lgpio.gpio_write(self.h, IN4, 0)
+
+        lgpio.tx_pwm(self.h, ENA, 1000, left_speed)
+        lgpio.tx_pwm(self.h, ENB, 1000, right_speed)
+
     def backward(self, speed=50):
 
         lgpio.gpio_write(self.h, IN1, 0)

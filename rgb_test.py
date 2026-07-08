@@ -11,17 +11,17 @@ try:
 
         print(f"R:{r} G:{g} B:{b} C:{c}")
 
-        if is_black():
+        if is_black(r, g, b, c):
 
             print("⚫ BLACK TILE")
 
-        elif is_blue():
+        elif is_blue(r, g, b, c):
 
             print("🔵 BLUE TILE")
 
-        elif is_silver():
+        elif is_green(r, g, b, c):
 
-            print("⚪ SILVER TILE")
+            print("🟩 GREEN TILE")
 
         else:
 

@@ -21,28 +21,32 @@ def get_distance(trig, echo):
 
     # Clear trigger
     lgpio.gpio_write(h, trig, 0)
-    time.sleep(0.0002)
+    time.sleep(0.00001)
 
     # 10 µs pulse
     lgpio.gpio_write(h, trig, 1)
     time.sleep(0.00001)
     lgpio.gpio_write(h, trig, 0)
 
+    # Use perf_counter for microsecond accuracy
+    t0 = time.perf_counter()
+    timeout = t0 + 0.005 # 5ms timeout waiting for high
+    
     # Wait for echo HIGH
-    timeout = time.time() + 0.02
     while lgpio.gpio_read(h, echo) == 0:
-        if time.time() > timeout:
+        if time.perf_counter() > timeout:
             return 999
 
-    start = time.time()
+    start = time.perf_counter()
 
     # Wait for echo LOW
-    timeout = time.time() + 0.02
+    # Timeout 6ms = ~1 meter max distance
+    timeout = start + 0.006 
     while lgpio.gpio_read(h, echo) == 1:
-        if time.time() > timeout:
+        if time.perf_counter() > timeout:
             return 999
 
-    end = time.time()
+    end = time.perf_counter()
 
     distance = (end - start) * 34300 / 2
     return round(distance, 1)
@@ -53,12 +57,12 @@ def get_front_distance():
 
 
 def get_left_distance():
-    time.sleep(0.01)   # Prevent cross-talk
+    time.sleep(0.005)   # Reduced from 10ms to 5ms
     return get_distance(LEFT_TRIG, LEFT_ECHO)
 
 
 def get_right_distance():
-    time.sleep(0.01)   # Prevent cross-talk
+    time.sleep(0.005)   # Reduced from 10ms to 5ms
     return get_distance(RIGHT_TRIG, RIGHT_ECHO)
 
 
